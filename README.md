@@ -44,8 +44,21 @@ The application will:
 ## Dependencies
 
 - Apache Parquet 1.13.1
-- Apache Hadoop 3.4.0
+- Apache Hadoop 3.3.6
 - SLF4J 2.0.9 (for logging)
+
+## Java Compatibility
+
+This application is compatible with Java 17-25. If you encounter issues with newer Java versions, the application includes compatibility fixes for:
+
+- `UnsupportedOperationException: getSubject is not supported` (Java 18+)
+- Hadoop filesystem initialization on Windows
+- SLF4J logging conflicts
+
+### Recommended Java Versions
+- **Recommended**: Java 17 LTS or Java 21 LTS
+- **Supported**: Java 17-25
+- **Minimum**: Java 17
 
 ## License
 

@@ -46,7 +46,13 @@ public class ParquetReader {
             throw new IllegalArgumentException("Path is not a file: " + filePath);
         }
         
+        // Set system properties before creating Hadoop configuration
+        System.setProperty("hadoop.home.dir", "/");
+        
         Configuration conf = new Configuration();
+        // Explicitly use local file system
+        conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
+        conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
         Path path = new Path(filePath);
 
         try (ParquetFileReader reader = ParquetFileReader.open(HadoopInputFile.fromPath(path, conf))) {
