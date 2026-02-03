@@ -53,7 +53,10 @@ public class ParquetReader {
         // Explicitly use local file system
         conf.set("fs.file.impl", org.apache.hadoop.fs.LocalFileSystem.class.getName());
         conf.set("fs.hdfs.impl", org.apache.hadoop.hdfs.DistributedFileSystem.class.getName());
-        Path path = new Path(filePath);
+        
+        // Convert to absolute path and create Hadoop Path with proper URI format
+        // This ensures correct file positioning when reading Parquet files
+        Path path = new Path(file.getAbsoluteFile().toURI().toString());
 
         try (ParquetFileReader reader = ParquetFileReader.open(HadoopInputFile.fromPath(path, conf))) {
             MessageType schema = reader.getFooter().getFileMetaData().getSchema();
