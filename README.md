@@ -49,7 +49,8 @@ parquet-read/
 │       └── java/
 │           └── com/
 │               └── parquetread/
-│                   └── ParquetReader.java  # Main program
+│                   ├── Main.java                   # Main program
+│                   └── SampleParquetCreator.java  # Test helper
 └── README.md
 ```
 
