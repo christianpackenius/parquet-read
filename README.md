@@ -42,8 +42,8 @@ The application will:
 ## Dependencies
 
 - Apache Parquet 1.13.1
-- Apache Hadoop 3.3.6
-- SLF4J 1.7.36 (for logging)
+- Apache Hadoop 3.4.0
+- SLF4J 2.0.9 (for logging)
 
 ## License
 

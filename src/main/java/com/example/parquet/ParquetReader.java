@@ -12,21 +12,40 @@ import org.apache.parquet.example.data.simple.convert.GroupRecordConverter;
 import org.apache.parquet.io.ColumnIOFactory;
 import org.apache.parquet.io.MessageColumnIO;
 import org.apache.parquet.io.RecordReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
  * A simple Parquet file reader that reads and displays the contents of a Parquet file.
  */
 public class ParquetReader {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ParquetReader.class);
 
     /**
      * Reads and displays the contents of a Parquet file.
      *
      * @param filePath the path to the Parquet file
      * @throws IOException if an error occurs while reading the file
+     * @throws IllegalArgumentException if the file path is invalid
      */
     public static void readParquetFile(String filePath) throws IOException {
+        if (filePath == null || filePath.trim().isEmpty()) {
+            throw new IllegalArgumentException("File path cannot be null or empty");
+        }
+        
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new IllegalArgumentException("File does not exist: " + filePath);
+        }
+        
+        if (!file.isFile()) {
+            throw new IllegalArgumentException("Path is not a file: " + filePath);
+        }
+        
         Configuration conf = new Configuration();
         Path path = new Path(filePath);
 
@@ -77,9 +96,13 @@ public class ParquetReader {
             System.out.println("Reading Parquet file: " + filePath);
             System.out.println();
             readParquetFile(filePath);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error: " + e.getMessage());
+            logger.error("Invalid file path: {}", filePath, e);
+            System.exit(1);
         } catch (IOException e) {
             System.err.println("Error reading Parquet file: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Failed to read parquet file: {}", filePath, e);
             System.exit(1);
         }
     }
