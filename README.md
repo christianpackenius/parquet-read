@@ -4,7 +4,9 @@ A Java application for reading and displaying Apache Parquet files.
 
 ## Description
 
-This project provides a simple command-line tool to read and display the contents of Parquet files. It uses Apache Parquet and Hadoop libraries to parse Parquet files and print their schema and records to the console.
+This project provides a simple command-line tool to read and display the
+contents of Parquet files. It uses Apache Parquet and Hadoop libraries to parse
+Parquet files and print their schema and records to the console.
 
 ## Prerequisites
 
@@ -48,3 +50,4 @@ The application will:
 ## License
 
 This project is provided as-is for educational and demonstration purposes.
+
