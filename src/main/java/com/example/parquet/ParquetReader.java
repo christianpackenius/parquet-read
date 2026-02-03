@@ -90,7 +90,13 @@ public class ParquetReader {
      * @param args command line arguments - expects the path to a Parquet file
      */
     public static void main(String[] args) {
-        String filePath = "H:\\huggingface-co - datasets - codeparrot - github-code - tree - main - data\\train-00001-of-01126.parquet";
+        String filePath;
+        
+        if (args.length > 0) {
+            filePath = args[0];
+        } else {
+            filePath = "H:\\huggingface-co - datasets - codeparrot - github-code - tree - main - data\\train-00001-of-01126.parquet";
+        }
         
         try {
             System.out.println("Reading Parquet file: " + filePath);
