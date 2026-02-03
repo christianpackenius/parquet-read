@@ -56,6 +56,6 @@ parquet-read/
 
 ### Dependencies
 
-- Apache Parquet 1.13.1
+- Apache Parquet 1.15.2
 - Apache Hadoop 3.3.6
 - SLF4J Simple for logging
