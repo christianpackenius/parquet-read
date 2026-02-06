@@ -13,6 +13,8 @@ import org.apache.parquet.io.RecordReader;
 import org.apache.parquet.schema.MessageType;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.util.stream.Stream;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -98,15 +100,50 @@ public class ParquetReader {
   }
 
   public static void main(String[] args) throws IOException {
-    readParquetFile("train-00000-of-00026.parquet");
-    readParquetFile("train-00001-of-00026.parquet");
-    readParquetFile("train-00002-of-00026.parquet");
-    readParquetFile("train-00003-of-00026.parquet");
-    readParquetFile("train-00004-of-00026.parquet");
-    readParquetFile("train-00005-of-00026.parquet");
-    readParquetFile("train-00006-of-00026.parquet");
-    readParquetFile("train-00007-of-00026.parquet");
-    readParquetFile("train-00008-of-00026.parquet");
-    readParquetFile("train-00009-of-00026.parquet");
+    workDirectory(java.nio.file.Path.of("H:\\huggingface.co"));
+  }
+
+  private static void workDirectory(java.nio.file.Path dir) throws IOException {
+    try (Stream<java.nio.file.Path> pathStream = java.nio.file.Files.list(dir)) {
+      pathStream.forEach(path -> {
+        try {
+          if (Files.isDirectory(path)) {
+            workDirectory(path);
+          } else if (Files.isRegularFile(path) && path.getFileName().toString().endsWith(".parquet")) {
+            workParquetFile(path);
+          }
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
+      });
+    }
+  }
+
+  private static void workParquetFile(java.nio.file.Path path) throws IOException {
+    System.out.println(path.toAbsolutePath());
+    java.nio.file.Path localPath = path.getFileName();
+    java.nio.file.Path destinationZIP = java.nio.file.Path.of(path.getParent().toString(), path.getFileName().toString() + "-context.zip");
+    String zipOutput = java.nio.file.Path.of(localPath.toString()).toAbsolutePath() + "-context.zip";
+    java.nio.file.Path localZIP = java.nio.file.Path.of(zipOutput);
+    Files.deleteIfExists(localPath);
+    Files.deleteIfExists(localZIP);
+    if (Files.exists(destinationZIP)) {
+      return;
+    }
+
+    // Kopiert den Pfad "hierhin". Verarbeitet sie dann und löscht sie schließlich wieder.
+    Files.copy(path, localPath);
+
+    // Leider können einzelne Parquet-Dateien immer mal wieder nicht verarbeitet
+    // werden. :-(
+    try {
+      readParquetFile(localPath.toString());
+    } catch (Exception e) {
+      Files.deleteIfExists(localPath);
+      Files.deleteIfExists(localZIP);
+      e.printStackTrace();
+    }
+    Files.delete(localPath);
+    Files.move(localZIP, destinationZIP);
   }
 }
